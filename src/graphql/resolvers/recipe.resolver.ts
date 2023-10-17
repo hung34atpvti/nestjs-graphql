@@ -3,6 +3,7 @@ import { RecipeType } from '../types/recipe.type';
 import { RecipeService } from '../../recipe/recipe.service';
 import { UserInputError } from '@nestjs/apollo';
 import { RecipeInput } from '../inputs/recipe.input';
+import { Recipe } from '@prisma/client';
 
 @Resolver()
 export class RecipeResolver {
@@ -28,7 +29,7 @@ export class RecipeResolver {
   async createRecipe(
     @Args('recipeData') recipeData: RecipeInput,
   ): Promise<RecipeType> {
-    return this.recipesService.create(recipeData);
+    return this.recipesService.create(recipeData as Recipe);
   }
 
   @Mutation(() => RecipeType)
@@ -36,7 +37,7 @@ export class RecipeResolver {
     @Args('id', { type: () => Int }) id: number,
     @Args('recipeData') recipeData: RecipeInput,
   ): Promise<RecipeType> {
-    return this.recipesService.update(id, recipeData);
+    return this.recipesService.update(id, recipeData as Recipe);
   }
 
   @Mutation(() => Boolean)

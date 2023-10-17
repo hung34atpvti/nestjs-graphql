@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Recipe } from '../../recipe/recipe.model';
+import { Recipe } from '@prisma/client';
 
 @ObjectType()
 export class RecipeType implements Recipe {

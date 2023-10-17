@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RecipeType } from '../graphql/types/recipe.type';
 import { PrismaService } from '../db/prisma/prisma.service';
+import { Recipe } from '@prisma/client';
 
 @Injectable()
 export class RecipeService {
@@ -8,26 +8,29 @@ export class RecipeService {
 
   private readonly logger = new Logger(RecipeService.name);
 
-  async findAll(): Promise<RecipeType[]> {
+  async findAll(): Promise<Recipe[]> {
     return this.prisma.recipe.findMany();
   }
 
-  async findById(id: number): Promise<RecipeType> {
-    return { id } as RecipeType;
+  async findById(id: number): Promise<Recipe> {
+    return this.prisma.recipe.findFirst({ where: { id } });
   }
 
-  async create(recipeData: Partial<RecipeType>): Promise<RecipeType> {
-    return recipeData as RecipeType;
+  async create(recipeData: Recipe): Promise<Recipe> {
+    return this.prisma.recipe.create({
+      data: recipeData,
+    });
   }
 
-  async update(
-    id: number,
-    recipeData: Partial<RecipeType>,
-  ): Promise<RecipeType> {
-    return { id, ...recipeData } as RecipeType;
+  async update(id: number, recipeData: Recipe): Promise<Recipe> {
+    return this.prisma.recipe.update({
+      where: { id },
+      data: recipeData,
+    });
   }
 
   async hardDelete(id: number): Promise<void> {
+    await this.prisma.recipe.delete({ where: { id } });
     this.logger.log(`deletedId: ${id}`);
     return;
   }
