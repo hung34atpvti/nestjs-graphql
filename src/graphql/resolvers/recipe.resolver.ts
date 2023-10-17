@@ -1,22 +1,22 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Recipe } from './recipe.type';
-import { RecipesService } from './recipes.service';
+import { RecipeType } from '../types/recipe.type';
+import { RecipeService } from '../../recipe/recipe.service';
 import { UserInputError } from '@nestjs/apollo';
-import { RecipeInput } from './recipe.input';
+import { RecipeInput } from '../inputs/recipe.input';
 
 @Resolver()
-export class RecipesResolver {
-  constructor(private readonly recipesService: RecipesService) {}
+export class RecipeResolver {
+  constructor(private readonly recipesService: RecipeService) {}
 
-  @Query(() => [Recipe])
+  @Query(() => [RecipeType])
   async getRecipes() {
     return this.recipesService.findAll();
   }
 
-  @Query(() => Recipe)
+  @Query(() => RecipeType)
   async getRecipe(
     @Args('id', { type: () => Int }) id: number,
-  ): Promise<Recipe> {
+  ): Promise<RecipeType> {
     const recipe = await this.recipesService.findById(id);
     if (!recipe) {
       throw new UserInputError('Recipe not found');
@@ -24,18 +24,18 @@ export class RecipesResolver {
     return recipe;
   }
 
-  @Mutation(() => Recipe)
+  @Mutation(() => RecipeType)
   async createRecipe(
     @Args('recipeData') recipeData: RecipeInput,
-  ): Promise<Recipe> {
+  ): Promise<RecipeType> {
     return this.recipesService.create(recipeData);
   }
 
-  @Mutation(() => Recipe)
+  @Mutation(() => RecipeType)
   async updateRecipe(
     @Args('id', { type: () => Int }) id: number,
     @Args('recipeData') recipeData: RecipeInput,
-  ): Promise<Recipe> {
+  ): Promise<RecipeType> {
     return this.recipesService.update(id, recipeData);
   }
 

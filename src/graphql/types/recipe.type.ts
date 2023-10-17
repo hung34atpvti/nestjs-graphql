@@ -1,7 +1,8 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Recipe } from '../../recipe/recipe.model';
 
 @ObjectType()
-export class Recipe {
+export class RecipeType implements Recipe {
   @Field(() => Int)
   id: number;
 
