@@ -1,5 +1,5 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Recipe } from './recipe.entity';
+import { Recipe } from './recipe.type';
 import { RecipesService } from './recipes.service';
 import { UserInputError } from '@nestjs/apollo';
 import { RecipeInput } from './recipe.input';
