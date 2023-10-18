@@ -1,11 +1,14 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { RecipeType } from '../types/recipe.type';
-import { RecipeService } from '../../recipe/recipe.service';
+import { RecipeType } from './types/recipe.type';
+import { RecipeService } from './recipe.service';
 import { UserInputError } from '@nestjs/apollo';
-import { RecipeInput } from '../inputs/recipe.input';
+import { RecipeInputType } from './types/recipe.input.type';
 import { Recipe } from '@prisma/client';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Resolver()
+@UseGuards(AuthGuard)
 export class RecipeResolver {
   constructor(private readonly recipesService: RecipeService) {}
 
@@ -27,7 +30,7 @@ export class RecipeResolver {
 
   @Mutation(() => RecipeType)
   async createRecipe(
-    @Args('recipeData') recipeData: RecipeInput,
+    @Args('recipeData') recipeData: RecipeInputType,
   ): Promise<RecipeType> {
     return this.recipesService.create(recipeData as Recipe);
   }
@@ -35,7 +38,7 @@ export class RecipeResolver {
   @Mutation(() => RecipeType)
   async updateRecipe(
     @Args('id', { type: () => Int }) id: number,
-    @Args('recipeData') recipeData: RecipeInput,
+    @Args('recipeData') recipeData: RecipeInputType,
   ): Promise<RecipeType> {
     return this.recipesService.update(id, recipeData as Recipe);
   }
